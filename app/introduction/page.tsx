@@ -32,6 +32,7 @@ const IntroductionPage = async () => {
 
     return (
         <WithBasicInfoLayout>
+            ㅎㅇ
 {/*             <Introduction data={data} /> */}
         </WithBasicInfoLayout>
     );
