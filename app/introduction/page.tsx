@@ -19,21 +19,23 @@ type IntroductionData = {
     sections: Section[];
 };
 
-// const fetchIntroductionData = async (): Promise<IntroductionData[]> => {
-//     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/introduction`);
-//     if (!response.ok) {
-//         throw new Error("Failed to fetch data");
-//     }
-//     return response.json();
-// };
+const fetchIntroductionData = async (): Promise<IntroductionData[]> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/introduction`, {
+        cache: 'no-store', // SSR에서 항상 최신 데이터를 가져오기 위해 사용
+    });
+    
+    if (!response.ok) {
+        throw new Error("Failed to fetch data");
+    }
+    return response.json();
+};
 
 const IntroductionPage = async () => {
-    // const data = await fetchIntroductionData();
+    const data = await fetchIntroductionData();
 
     return (
         <WithBasicInfoLayout>
-            ㅎㅇ
-{/*             <Introduction data={data} /> */}
+            <Introduction data={data} />
         </WithBasicInfoLayout>
     );
 }
