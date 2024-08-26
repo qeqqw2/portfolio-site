@@ -28,7 +28,7 @@ type IntroductionData = {
 // };
 
 const IntroductionPage = async () => {
-    const data = await fetchIntroductionData();
+    // const data = await fetchIntroductionData();
 
     return (
         <WithBasicInfoLayout>
