@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())  // 고유 ID
+  name          String   // 이름
+  profilePic    String   @db.Text   // 프로필 사진 (URL)
+  blogUrl       String?  // 블로그 주소 (URL)
+  githubUrl     String?  // 깃허브 주소 (URL)
+  email         String   @unique  // 이메일 주소
+  phoneNumber   String?  // 전화번호
+  bio           String?  // 자기소개
+  birthDate     DateTime?  // 생년월일
+  status        String?  // 상태
+  desiredJob    String?  // 희망직무
+  education     String?  // 학력사항
+  isMajor       Boolean  @default(false)  // 전공자 여부
+  createdAt     DateTime @default(now())  // 생성일
+  updatedAt     DateTime @updatedAt  // 수정일
+}
+
+model Experience {
+  id       Int      @id @default(autoincrement())
+  content  String
+  impact   String
+  learning String
+}
+
+model Habit {
+  id       Int      @id @default(autoincrement())
+  content  String
+  impact   String
+  learning String
+}
+
+model Goal {
+  id       Int      @id @default(autoincrement())
+  content  String
+  impact   String
+  learning String
+}
+
+model TechStack {
+  id    Int       @id @default(autoincrement())
+  name  String
+  items TechItem[]
+}
+
+model TechItem {
+  id         Int      @id @default(autoincrement())
+  name       String
+  icon       String   // 아이콘 이름을 문자열로 받음
+  color      String
+  techStack  TechStack @relation(fields: [techStackId], references: [id])
+  techStackId Int
+}
+
+model Education {
+  id          Int           @id @default(autoincrement())
+  institution String
+  program     String
+  period      String
+  courseType  String        // 교육 과정 유형
+  activities  Activity[]     // 1대다 관계
+  achievements Achievement[] // 1대다 관계
+}
+
+model Activity {
+  id          Int        @id @default(autoincrement())
+  description String
+  education   Education  @relation(fields: [educationId], references: [id])
+  educationId Int
+}
+
+model Achievement {
+  id          Int        @id @default(autoincrement())
+  description String
+  education   Education  @relation(fields: [educationId], references: [id])
+  educationId Int
+}
+
+model Certificate {
+  id          Int      @id @default(autoincrement())
+  title       String
+  issuer      String
+  dateIssued  DateTime
+}
+
+model ProjectPanel {
+  id                 Int                   @id @default(autoincrement())
+  iconUrl            String                @db.Text
+  name               String
+  description        String
+  roleBadge          String
+  roleName           String
+  roleColor          String
+  teamSize           Int
+  projectPanelFeatures ProjectPanelFeature[]
+  projectPanelImages  ProjectPanelImage[]    // 메인 이미지와의 관계
+  projectModel       ProjectModel?          // ProjectModel과 1대1 관계
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+}
+
+model ProjectPanelFeature {
+  id        Int      @id @default(autoincrement())
+  name      String
+  projectPanelId Int
+  projectPanel   ProjectPanel  @relation(fields: [projectPanelId], references: [id])
+}
+
+model ProjectPanelImage {
+  id        Int      @id @default(autoincrement())
+  url       String   @db.Text
+  caption   String   @db.Text
+  projectPanelId Int
+  projectPanel   ProjectPanel  @relation(fields: [projectPanelId], references: [id])
+}
+
+model ProjectModel {
+  id                 Int                   @id @default(autoincrement())
+  projectPanelId     Int                   @unique
+  projectPanel       ProjectPanel          @relation(fields: [projectPanelId], references: [id])
+  posterUrl          String?                @db.Text // 선택적 필드
+  videoUrl           String?                @db.Text // 선택적 필드
+  architectureUrl    String                @db.Text
+  githubUrl          String                @db.Text
+  projectTechStacks   ProjectTechStack[]
+  projectImprovements ProjectImprovement[]
+  projectTeamMembers ProjectTeamMember[]
+  projectAchievements ProjectAchievement[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+}
+
+model ProjectTechStack {
+  id             Int      @id @default(autoincrement())
+  name           String
+  color          String
+  projectModelId Int
+  projectModel   ProjectModel  @relation(fields: [projectModelId], references: [id])
+}
+
+model ProjectImprovement {
+  id             Int      @id @default(autoincrement())
+  title          String
+  descriptions   ProjectDescription[]
+  images         ProjectImage[]
+  projectModelId Int
+  projectModel   ProjectModel  @relation(fields: [projectModelId], references: [id])
+}
+
+model ProjectDescription {
+  id             Int      @id @default(autoincrement())
+  label          String
+  content        String   @db.Text
+  projectImprovementId Int
+  projectImprovement   ProjectImprovement @relation(fields: [projectImprovementId], references: [id])
+}
+
+
+model ProjectImage {
+  id             Int      @id @default(autoincrement())
+  url            String   @db.Text
+  caption        String   @db.Text
+  projectImprovementId Int
+  projectImprovement   ProjectImprovement @relation(fields: [projectImprovementId], references: [id])
+}
+
+model ProjectTeamMember {
+  id             Int      @id @default(autoincrement())
+  role           String
+  name           String
+  projectModelId Int
+  projectModel   ProjectModel  @relation(fields: [projectModelId], references: [id])
+}
+
+model ProjectAchievement {
+  id             Int      @id @default(autoincrement())
+  label          String
+  content        String   @db.Text
+  projectModelId Int
+  projectModel   ProjectModel  @relation(fields: [projectModelId], references: [id])
+}
+
+model Introduction {
+  id        Int       @id @default(autoincrement())
+  title     String
+  sections  Section[]
+}
+
+model Section {
+  id             Int          @id @default(autoincrement())
+  content        String       @db.Text
+  introductionId Int
+  introduction   Introduction @relation(fields: [introductionId], references: [id])
+
+  @@index([introductionId])
+}
