@@ -73,7 +73,13 @@ export default function Education({educationData}: EducationProps) {
                 교육 이력
             </Heading>
             <Divider orientation="horizontal" borderColor="gray.300" borderWidth="1px"/>
-            <Grid templateColumns={{base: "repeat(1, 1fr)", md: "repeat(3, 1fr)"}} gap={6} mt={4}>
+            <Grid templateColumns={{base: "repeat(1, 1fr)", md: "repeat(3, 1fr)"}} gap={6} mt={4}
+                  sx={{
+                      '@media print': {
+                          gridTemplateColumns: "repeat(3, 1fr)",
+                          gap: '4px',
+                      }
+                  }}>
                 {educationData.map((education) => (
                     <Tooltip label="클릭해주세요!" fontSize="md" key={education.id}>
                         <GridItem

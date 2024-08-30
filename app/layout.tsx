@@ -14,16 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
         icons: {
             icon: iconUrl,
         },
-        openGraph: {
-            images: [
-                {
-                    url: '/images/og-image.webp',
-                    width: 800,
-                    height: 600,
-                    alt: "미리보기"
-                }
-            ]
-        }
     };
 }
 
